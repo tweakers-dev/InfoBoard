@@ -1,0 +1,38 @@
+{
+    "name": "pascaldevink/cilex-predis",
+    "description": "PRedis extension for Cilex",
+    "keywords": ["cilex", "predis", "redis"],
+    "homepage": "https://github.com/pascaldevink/Cilex-Predis",
+    "type": "library",
+    "license": "MIT",
+    "version": "dev",
+    "authors": [
+        {
+            "name": "Pascal de Vink",
+            "email": "pascal.de.vink@gmail.com"
+        },
+        {
+            "name": "Sven Eisenschmidt",
+            "email": "sven.eisenschmidt@gmail.com",
+            "homepage": "http://unsicherheitsagent.de/"
+        },
+        {
+            "name": "Michael Heap",
+            "email": "m@michaelheap.com",
+            "homepage": "http://michaelheap.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "predis/predis": "*"
+    },
+    "require-dev": {
+        "cilex/cilex": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "CilexPredis": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}

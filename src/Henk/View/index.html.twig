@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Henk Infoboard</title>
+    <link href="css/bootstrap-cyborg.min.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="images/henk.png">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span6" id="commitHistory" style="height: 300px; margin: 0 auto">
+            </div>
+            <div class="span6">
+                <table class="table table-striped">
+
+                    {% for issue in issues %}
+                        <tr>
+                            <td>{{ issue.key }}</td>
+                            <td>{{ issue.priority|lookupPriority }}</td>
+                            <td>{{ issue.type }}</td>
+                            <td>{{ issue.status|lookupStatus }}</td>
+                            <td>{{ issue.summary }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <table class="table table-striped">
+                    {% for commit in commits %}
+                    <tr>
+                        <td>{{ commit.author }}</td>
+                        <td>{{ commit.message }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="span6">
+                <table class="table table-striped">
+                    {% for tweet in tweets %}
+                        <tr>
+                            <td>{{ tweet.user.screen_name }}</td>
+                            <td>{{ tweet.text }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-1.9.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/highcharts.js"></script>
+    <script src="js/exporting.js"></script>
+
+    <script language="javascript">
+        var commitLabels = [
+            {% for key in commitHistory|keys %}
+                "{{ key }}"{% if loop.last == false %},{% endif %}
+            {% endfor %}
+        ];
+
+        var commitCounts = [
+            {% for commitCount in commitHistory %}
+                {{ commitCount }}{% if loop.last == false %},{% endif %}
+            {% endfor %}
+        ];
+
+        $(function () {
+            var chart;
+            $(document).ready(function() {
+                chart = new Highcharts.Chart({
+                    colors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
+                        "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
+                    chart: {
+                        backgroundColor: {
+                            linearGradient: [0, 0, 0, 400],
+                            stops: [
+                                [0, 'rgb(96, 96, 96)'],
+                                [1, 'rgb(16, 16, 16)']
+                            ]
+                        },
+                        borderWidth: 0,
+                        borderRadius: 15,
+                        plotBackgroundColor: null,
+                        plotShadow: false,
+                        plotBorderWidth: 0,
+                        renderTo: 'commitHistory',
+                        type: 'line',
+                        marginBottom: 55
+                    },
+                    title: {
+                        text: 'Number of commits',
+                        x: -20, //center
+                        style: {
+                            color: '#999999',
+                            font: '16px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        categories: commitLabels
+                    },
+                    yAxis: {
+                        title: {
+                            text: ''
+                        },
+                        showEmpty: false
+                    },
+                    series: [{
+                        name: 'Commits',
+                        data: commitCounts
+                    }]
+                })
+            });
+        });
+    </script>
+</body>
+</html>

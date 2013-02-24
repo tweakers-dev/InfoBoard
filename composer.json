@@ -1,0 +1,17 @@
+{
+    "require": {
+        "cilex/console-service-provider": "1.0.*@dev",
+        "cilex/cilex": "1.0.*@dev",
+        "silex/silex": "1.0.*@dev",
+        "mheap/silex-predis": "dev-master",
+        "webcreate/util": "dev-master",
+        "webcreate/vcs": "dev-master",
+        "cpliakas/jira": "dev-master",
+        "twig/twig": "1.12.*@dev",
+        "dg/twitter-php": "dev-stream_context"
+    },
+
+    "autoload": {
+        "psr-0": { "Henk": "src/" }
+    }
+}
