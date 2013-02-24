@@ -8,3 +8,5 @@
 *.iws
 
 web/.htaccess
+
+config/config.json

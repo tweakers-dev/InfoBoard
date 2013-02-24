@@ -19,13 +19,13 @@ class ImportJiraIssues extends Command
             ->setDescription('Import jira issues');
     }
 
-        protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $app = $this->getContainer();
 
-        $host = '';
-        $username = '';
-        $password = '';
+        $host = $app['config']->jira->host;
+        $username = $app['config']->jira->user;
+        $password = $app['config']->jira->pass;
 
         $jira = new JiraClient($host);
         $jira->login($username, $password);

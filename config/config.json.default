@@ -1,0 +1,20 @@
+{
+    "debug": true,
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "user": "",
+        "pass": ""
+    },
+    "jira": {
+        "host": "",
+        "user": "",
+        "pass": ""
+    },
+    "twitter": {
+        "consumerkey": "",
+        "consumersecret": "",
+        "accesstoken": "",
+        "accesstokensecret": ""
+    }
+}

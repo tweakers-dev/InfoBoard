@@ -10,6 +10,8 @@ use Cilex\Command\Command;
 use Webcreate\Vcs\Svn;
 use Webcreate\Vcs\Common\Commit;
 use Webcreate\Vcs\Common\Pointer;
+use Webcreate\Vcs\Common\VcsFileInfo;
+use Webcreate\Vcs\Common\Reference;
 
 class ImportSvnCommand extends Command
 {
@@ -39,13 +41,12 @@ class ImportSvnCommand extends Command
         $output->writeln($text);
 
         $svn = new Svn($repoUrl);
-        $svn->setPointer(new Pointer($branch));
-        $svn->setCredentials('', '');
+        $path = new VcsFileInfo('/', new Reference($branch), VcsFileInfo::BRANCH);
 
         /**
          * @var $result Commit[]
          */
-        $result = $svn->log('/', null, $nrOfChanges);
+        $result = $svn->log($path, null, $nrOfChanges);
 
         $this->saveLatestCommits($app, $result);
         $this->rebuildCommitReports($app, $result);

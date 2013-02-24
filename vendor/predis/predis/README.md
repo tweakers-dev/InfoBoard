@@ -8,7 +8,7 @@ serializing and parsing the Redis protocol. Predis is also available in an async
 through the experimental client provided by the [Predis\Async](http://github.com/nrk/predis-async)
 library.
 
-For a list of frequently asked questions about Predis, see __FAQ.md__ in the root of the repository.
+For a list of frequently asked questions about Predis see our [FAQ](FAQ.md).
 More details are available on the [official wiki](http://wiki.github.com/nrk/predis) of the project.
 
 
@@ -113,13 +113,19 @@ $replies = $redis->pipeline(function ($pipe) {
 
 ### Multiple and customizable connection backends ###
 
-Predis can optionally use different connection backends to connect to Redis. One of them leverages
+Predis can optionally use different connection backends to connect to Redis. Two of them leverage
 the [phpiredis](http://github.com/nrk/phpiredis) C-based extension resulting in a major speed bump
-especially when dealing with long multibulk replies (the `socket` extension is also required):
+especially when dealing with long multibulk replies, namely `Predis\Connection\PhpiredisConnection`
+(the `socket` extension is also required) and `Predis\Connection\StreamPhpiredisConnection` (it
+does not require additional extensions since it relies on PHP's native streams). Both of them can
+connect to Redis using standard TCP/IP connections or UNIX domain sockets:
 
 ```php
 $client = new Predis\Client('tcp://127.0.0.1', array(
-    'connections' => array('tcp' => 'Predis\Connection\PhpiredisConnection')
+    'connections' => array(
+        'tcp'  => 'Predis\Connection\PhpiredisConnection',
+        'unix' => 'Predis\Connection\PhpiredisStreamConnection',
+    )
 ));
 ```
 
@@ -140,7 +146,7 @@ $client = new Predis\Client('tcp://127.0.0.1', array(
 ```
 
 For a more in-depth insight on how to create new connection backends you can look at the actual
-implementation of the classes contained in `Predis\Connection` namespace.
+implementation of the classes contained in the `Predis\Connection` namespace.
 
 
 ### Defining and registering new commands on the client at runtime ###
@@ -214,7 +220,7 @@ Redis. If you do not have Redis up and running, integration tests can be disable
 suite is configured to execute integration tests using the server profile for Redis v2.4 (which is the
 current stable version of Redis). You can optionally run the suite against a Redis instance built from
 the `unstable` branch with the development profile by changing the `REDIS_SERVER_VERSION` to `dev` in
-the `phpunit.xml` file. More details about testing Predis are available in `tests/README.md`.
+the `phpunit.xml` file. More details on testing Predis can be found in [the tests README](tests/README.md).
 
 Predis uses Travis CI for continuous integration. You can find the results of the test suite and the build
 history [on its project page](http://travis-ci.org/nrk/predis).
@@ -252,4 +258,4 @@ history [on its project page](http://travis-ci.org/nrk/predis).
 
 ## License ##
 
-The code for Predis is distributed under the terms of the MIT license (see LICENSE).
+The code for Predis is distributed under the terms of the MIT license (see [LICENSE](LICENSE)).

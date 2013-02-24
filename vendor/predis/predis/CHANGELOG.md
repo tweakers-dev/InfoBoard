@@ -1,3 +1,47 @@
+v0.8.3 (2013-02-18)
+===============================================================================
+
+- Added `CLIENT SETNAME` and `CLIENT GETNAME` (ISSUE #102).
+
+- Implemented the `Predis\Connection\PhpiredisStreamConnection` class using the
+  `phpiredis` extension like `Predis\Connection\PhpiredisStreamConnection`, but
+  without requiring the `socket` extension since it relies on PHP's streams.
+
+- Added support for the TCP_NODELAY flag via the `tcp_nodelay` parameter for
+  stream-based connections, namely `Predis\Connection\StreamConnection` and
+  `Predis\Connection\PhpiredisStreamConnection` (requires PHP >= 5.4.0).
+
+- Updated the aggregated connection class for redis-cluster to work with 16384
+  hash slots instead of 4096 to reflect the recent change from redis unstable
+  ([see this commit](https://github.com/antirez/redis/commit/ebd666d)).
+
+- The constructor of `Predis\Client` now accepts a callable as first argument
+  returning `Predis\Connection\ConnectionInterface`. Users can create their
+  own self-contained strategies to create and set up the underlying connection.
+
+- Users should return `0` from `Predis\Command\ScriptedCommand::getKeysCount()`
+  instead of `FALSE` to indicate that all of the arguments of a Lua script must
+  be used to populate `ARGV[]`. This does not represent a breaking change.
+
+- The `Predis\Helpers` class has been deprecated and it will be removed in
+  future releases.
+
+
+v0.8.2 (2013-02-03)
+===============================================================================
+
+- Added `Predis\Session\SessionHandler` to make it easy to store PHP sessions
+  on Redis using Predis. Please note that this class needs either PHP >= 5.4.0
+  or a polyfill for PHP's `SessionHandlerInterface`.
+
+- Added the ability to get the default value of a client option directly from
+  `Predis\Option\ClientOption` using the `getDefault()` method by passing the
+  option name or its instance.
+
+- __FIX__: the standard pipeline executor was not using the response parser
+  methods associated to commands to process raw responses (ISSUE #101).
+
+
 v0.8.1 (2013-01-19)
 ===============================================================================
 

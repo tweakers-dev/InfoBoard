@@ -294,9 +294,11 @@ class PredisClusterHashStrategy implements CommandHashStrategyInterface
      */
     protected function getKeyFromScriptingCommands(CommandInterface $command)
     {
-        $keys = $command instanceof ScriptedCommand
-                    ? $command->getKeys()
-                    : array_slice($args = $command->getArguments(), 2, $args[1]);
+        if ($command instanceof ScriptedCommand) {
+            $keys = $command->getKeys();
+        } else {
+            $keys = array_slice($args = $command->getArguments(), 2, $args[1]);
+        }
 
         if ($keys && $this->checkSameHashForKeys($keys)) {
             return $keys[0];
@@ -341,7 +343,7 @@ class PredisClusterHashStrategy implements CommandHashStrategyInterface
      */
     protected function checkSameHashForKeys(Array $keys)
     {
-        if (($count = count($keys)) === 0) {
+        if (!$count = count($keys)) {
             return false;
         }
 

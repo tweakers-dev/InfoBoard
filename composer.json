@@ -8,10 +8,21 @@
         "webcreate/vcs": "dev-master",
         "cpliakas/jira": "dev-master",
         "twig/twig": "1.12.*@dev",
-        "dg/twitter-php": "dev-stream_context"
+        "dg/twitter-php": "dev-stream_context",
+        "igorw/config-service-provider": "1.0.*@dev",
+        "sensiolabs/security-checker": "dev-master"
     },
 
     "autoload": {
         "psr-0": { "Henk": "src/" }
+    },
+
+    "scripts": {
+        "post-install-cmd": [
+            "vendor/bin/security-checker security:check"
+        ],
+        "post-update-cmd": [
+            "vendor/bin/security-checker security:check"
+        ]
     }
 }

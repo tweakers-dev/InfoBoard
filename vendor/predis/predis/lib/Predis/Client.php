@@ -33,12 +33,11 @@ use Predis\Transaction\MultiExecContext;
  */
 class Client implements ClientInterface
 {
-    const VERSION = '0.8.1';
+    const VERSION = '0.8.3';
 
     private $options;
     private $profile;
     private $connection;
-    private $connections;
 
     /**
      * Initializes a new client with optional connection parameters and client options.
@@ -50,7 +49,6 @@ class Client implements ClientInterface
     {
         $this->options = $this->filterOptions($options);
         $this->profile = $this->options->profile;
-        $this->connections = $this->options->connections;
         $this->connection = $this->initializeConnection($parameters);
     }
 
@@ -64,7 +62,7 @@ class Client implements ClientInterface
      */
     protected function filterOptions($options)
     {
-        if ($options === null) {
+        if (!isset($options)) {
             return new ClientOptions();
         }
 
@@ -94,13 +92,26 @@ class Client implements ClientInterface
         }
 
         if (is_array($parameters) && isset($parameters[0])) {
-            $replication = isset($this->options->replication) && $this->options->replication;
-            $connection = $this->options->{$replication ? 'replication' : 'cluster'};
+            $options = $this->options;
+            $replication = isset($options->replication) && $options->replication;
+            $connection = $options->{$replication ? 'replication' : 'cluster'};
 
-            return $this->connections->createAggregated($connection, $parameters);
+            return $options->connections->createAggregated($connection, $parameters);
         }
 
-        return $this->connections->create($parameters);
+        if (is_callable($parameters)) {
+            $connection = call_user_func($parameters, $this->options);
+
+            if (!$connection instanceof ConnectionInterface) {
+                throw new \InvalidArgumentException(
+                    'Callable parameters must return instances of Predis\Connection\ConnectionInterface'
+                );
+            }
+
+            return $connection;
+        }
+
+        return $this->options->connections->create($parameters);
     }
 
     /**
@@ -126,7 +137,7 @@ class Client implements ClientInterface
      */
     public function getConnectionFactory()
     {
-        return $this->connections;
+        return $this->options->connections;
     }
 
     /**
@@ -138,7 +149,7 @@ class Client implements ClientInterface
      */
     public function getClientFor($connectionID)
     {
-        if (($connection = $this->getConnectionById($connectionID)) === null) {
+        if (!$connection = $this->getConnectionById($connectionID)) {
             throw new \InvalidArgumentException("Invalid connection ID: '$connectionID'");
         }
 
@@ -269,14 +280,14 @@ class Client implements ClientInterface
 
             $response = $this->executeCommand($eval);
 
-            if (false === $response instanceof ResponseObjectInterface) {
+            if (!$response instanceof ResponseObjectInterface) {
                 $response = $command->parseResponse($response);
             }
 
             return $response;
         }
 
-        if ($this->options->exceptions === true) {
+        if ($this->options->exceptions) {
             throw new ServerException($response->getMessage());
         }
 

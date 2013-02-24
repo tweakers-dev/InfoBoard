@@ -19,10 +19,10 @@ class ImportTwitterCommand extends Command
     {
         $app = $this->getContainer();
 
-        $consumerKey = '';
-        $consumerSecret = '';
-        $accessToken = '';
-        $accessTokenSecret = '';
+        $consumerKey = $app['config']->twitter->consumerkey;
+        $consumerSecret = $app['config']->twitter->consumersecret;
+        $accessToken = $app['config']->twitter->accesstoken;
+        $accessTokenSecret = $app['config']->twitter->accesstokensecret;
 
         $twitter = new \Twitter($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
 

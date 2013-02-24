@@ -28,7 +28,6 @@ class ConnectionParameters implements ConnectionParametersInterface
         'host' => '127.0.0.1',
         'port' => 6379,
         'timeout' => 5.0,
-        'iterable_multibulk' => false,
     );
 
     /**
@@ -37,7 +36,7 @@ class ConnectionParameters implements ConnectionParametersInterface
     public function __construct($parameters = array())
     {
         if (!is_array($parameters)) {
-            $parameters = $this->parseURI($parameters);
+            $parameters = self::parseURI($parameters);
         }
 
         $this->parameters = $this->filter($parameters) + $this->getDefaults();
@@ -109,14 +108,14 @@ class ConnectionParameters implements ConnectionParametersInterface
      * @param string $uri Connection string.
      * @return array
      */
-    private function parseURI($uri)
+    public static function parseURI($uri)
     {
         if (stripos($uri, 'unix') === 0) {
             // Hack to support URIs for UNIX sockets with minimal effort.
             $uri = str_ireplace('unix:///', 'unix://localhost/', $uri);
         }
 
-        if (($parsed = @parse_url($uri)) === false || !isset($parsed['host'])) {
+        if (!($parsed = @parse_url($uri)) || !isset($parsed['host'])) {
             throw new ClientException("Invalid URI: $uri");
         }
 
@@ -140,7 +139,7 @@ class ConnectionParameters implements ConnectionParametersInterface
      */
     private function filter(Array $parameters)
     {
-        if (count($parameters) > 0) {
+        if ($parameters) {
             $casters = array_intersect_key($this->getValueCasters(), $parameters);
 
             foreach ($casters as $parameter => $caster) {
