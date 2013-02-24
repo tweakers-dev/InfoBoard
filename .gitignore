@@ -1,0 +1,10 @@
+
+*.lock
+
+*.iml
+
+*.ipr
+
+*.iws
+
+web/.htaccess
