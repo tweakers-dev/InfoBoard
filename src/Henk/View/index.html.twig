@@ -50,6 +50,18 @@
 
             </div>
         </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <table class="table table-striped">
+                    {% for jobName, jobColor in jobStatus %}
+                        <tr>
+                            <td>{{ jobName }}</td>
+                            <td>{{ jobColor }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
 
     <script src="js/jquery-1.9.min.js"></script>

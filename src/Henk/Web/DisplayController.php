@@ -32,12 +32,14 @@ class DisplayController
         $issues = unserialize($this->predis->get('jiraissues'));
 
         $tweets = $this->getTweets();
+        $jobStatus = $this->getJenkinsJobStatus();
 
         $content = $app['twig']->render('index.html.twig', array(
             'commits'       => $commits,
             'commitHistory' => $commitHistory,
             'issues'        => $issues,
-            'tweets'        => $tweets
+            'tweets'        => $tweets,
+            'jobStatus'     => $jobStatus,
         ));
 
         return new Response($content, 200, array('Cache-Control' => 'public'));
@@ -79,5 +81,11 @@ class DisplayController
     {
         $tweets = unserialize($this->predis->get('tweets'));
         return array_slice($tweets, 0, 10);
+    }
+
+    protected function getJenkinsJobStatus()
+    {
+        $jobStatus = unserialize($this->predis->get('jenkinsStatus'));
+        return $jobStatus;
     }
 }

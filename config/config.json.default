@@ -16,5 +16,10 @@
         "consumersecret": "",
         "accesstoken": "",
         "accesstokensecret": ""
-    }
+    },
+     "jenkins": {
+         "host": "",
+         "user": "",
+         "pass": ""
+     }
 }

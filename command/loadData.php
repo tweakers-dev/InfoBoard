@@ -24,5 +24,6 @@ $app->command(new \Cilex\Command\GreetCommand());
 $app->command(new \Henk\Command\ImportSvnCommand());
 $app->command(new \Henk\Command\ImportJiraIssues());
 $app->command(new \Henk\Command\ImportTwitterCommand());
+$app->command(new \Henk\Command\ImportJenkinsCommand());
 
 $app->run();
