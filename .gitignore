@@ -10,3 +10,5 @@
 web/.htaccess
 
 config/config.json
+
+vendor/.DS_Store
